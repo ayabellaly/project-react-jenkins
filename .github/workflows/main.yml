@@ -33,5 +33,5 @@ jobs:
           
     - name: Push Docker images to Docker Hub
       run: |
-          docker push hibab/mern-client:latest
-          docker push hibab/mern-server:latest
+          docker push aya20/mern-client:latest
+          docker push aya20/mern-server:latest
