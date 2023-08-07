@@ -2,12 +2,26 @@ pipeline {
     agent any
 
     stages {
-        stage('Checkout') {
+        stage('Stage 1') {
             steps {
-                // Checkout your React.js app repository
-                // Use Git or any version control system you prefer
-                // Example using Git:
-                git 'https://github.com/ayabellaly/projectreactjenkins.git'
+                // echo 'hello'
+            }
+        }
+
+        stage('Stage 2') {
+            steps {
+                // echo 'step 2'
             }
         }
     }
+
+    post {
+        success {
+            // echo 'hala hala'
+        }
+
+        failure {
+            // echo 'lah lah'
+        }
+    }
+}
