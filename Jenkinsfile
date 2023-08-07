@@ -10,3 +10,4 @@ pipeline {
                 git 'https://github.com/ayabellaly/projectreactjenkins.git'
             }
         }
+    }
