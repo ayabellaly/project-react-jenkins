@@ -1,31 +1,12 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000'
-        }
-    }
-     environment {
-            CI = 'true'
-        }
+    agent any
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'npm install'
+                // Checkout your React.js app repository
+                // Use Git or any version control system you prefer
+                // Example using Git:
+                git 'https://github.com/your-username/your-react-app.git'
             }
         }
-        stage('Test') {
-                    steps {
-                        sh './jenkins/scripts/test.sh'
-                    }
-                }
-                stage('Deliver') {
-                            steps {
-                                sh './jenkins/scripts/deliver.sh'
-                                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                                sh './jenkins/scripts/kill.sh'
-                            }
-                        }
-
-    }
-}
