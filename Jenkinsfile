@@ -1,31 +1,32 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:6-alpine'
-            args '-p 3000:3000'
-        }
-    }
-     environment {
-            CI = 'true'
-        }
-    stages {
+  agent any
+   stages {
         stage('Build') {
+          steps {
+           bat 'docker build -t aya20/mern-server:latest ./server'
+           bat 'docker build -t aya20/mern-client:latest ./client'
+            }
+         }
+
+     stage('Test') {
             steps {
-                sh 'npm install'
+                script {
+                    // Run tests for the server
+                    bat 'docker run --rm aya20/mern-server:latest npm test'
+
+                    // Run tests for the client
+                    bat 'docker run --rm aya20/mern-client:latest npm test'
+                }
             }
         }
-        stage('Test') {
-                    steps {
-                        sh './jenkins/scripts/test.sh'
-                    }
-                }
-                stage('Deliver') {
-                            steps {
-                                sh './jenkins/scripts/deliver.sh'
-                                input message: 'Finished using the web site? (Click "Proceed" to continue)'
-                                sh './jenkins/scripts/kill.sh'
-                            }
-                        }
-
+        stage('Push') {
+         steps{
+               withDockerRegistry([credentialsId: "aya-dockerhub", url: ""])
+               {
+                  bat 'docker push aya20/mern-server:latest'
+                  bat 'docker push aya20/mern-client:latest'
+               }
+         } 
+      }
     }
-}
+   }
