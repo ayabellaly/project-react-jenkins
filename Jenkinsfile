@@ -1,27 +1,20 @@
 pipeline {
-    agent any
-
-    stages {
-        stage('Stage 1') {
-            steps {
-                // echo 'hello'
+  agent any
+   stages {
+        stage('Build') {
+          steps {
+           bat 'docker build -t aya20/mern-server:latest ./server'
+           bat 'docker build -t aya20/mern-client:latest ./client'
             }
-        }
-
-        stage('Stage 2') {
-            steps {
-                // echo 'step 2'
-            }
-        }
+         }
+        stage('Push') {
+         steps{
+               withDockerRegistry([credentialsId: "aya-dockerhub", url: ""])
+               {
+                  bat 'docker push aya20/mern-server:latest'
+                  bat 'docker push aya20/mern-client:latest'
+               }
+         } 
+      }
     }
-
-    post {
-        success {
-            // echo 'hala hala'
-        }
-
-        failure {
-            // echo 'lah lah'
-        }
-    }
-}
+   }
